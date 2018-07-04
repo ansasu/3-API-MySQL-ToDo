@@ -54,20 +54,17 @@ function seedTodoTable(callback) {
   })
 }
 
-
-function getTodo(id, callback) {
-  console.log(id)
-  con.query("SELECT * FROM todo.todo WHERE id = " + id, function (err, result, fields) {
-    if (err) return callback(err); 
-      return callback(null, result)
-  })
-}
-
-
 function getTodoList(callback) {
   con.query("SELECT * FROM todo.todo", function (err, result, fields) {
     if (err) return callback(err);
     console.log(result);
+    return callback(null, result)
+  });
+}
+
+function getTodo(id, callback) {
+  con.query("SELECT * FROM todo.todo WHERE id= " + id, function (err, result, fields) {
+    if (err) return callback(err);
     return callback(null, result)
   });
 }
@@ -79,80 +76,105 @@ function getTodosRealizados(callback) {
   });
 }
 
-function createTodo(nombre, realizado, callback){
-  con.query("INSERT INTO todo.todo (nombre, realizado) VALUES ('"+nombre+"' ,"+realizado+")", function (err, result, fields) {
+
+function createTodo(nombre, realizado, callback) {
+  con.query("INSERT INTO todo.todo (nombre, realizado) VALUES ('"+ nombre + "'," + realizado + ")", function (err, result, fields) {
     if (err) return callback(err);
     return callback(null, result)
-  });
+ });
 }
 
-function updateTodo(id,nombre, realizado,callback){
-  var sentencia= "UPDATE todo.todo SET nombre = '"+nombre+"', realizado= "+realizado+" WHERE id="+id
+function updateTodo(id,nombre, realizado, callback) {
+  var sentencia="UPDATE todo.todo SET nombre='"+ nombre +"', realizado= "+ realizado +" WHERE id="+id
+    console.log(sentencia)
+  con.query (sentencia, function (err, result, fields) {
+    if (err) return callback(err);
+    return callback(null, result)
+ });
+}
+
+function deleteTodo(id,callback) {
+  var sentencia="DELETE FROM todo.todo WHERE  id="+id
+  console.log (sentencia)
+   con.query (sentencia, function (err, result, fields) {
+    console.log('bien')
+    if (err) return callback(err);
+    return callback(null, result)
+ });
+}
+
+function cambiarARealizado(callback) {
+  var sentencia= "UPDATE todo.todo SET realizado=1 WHERE realizado=0"
   console.log(sentencia)
-  con.query(sentencia, function (err, result,fields){
+  con.query(sentencia, function (err, result, fields) {
     if (err) return callback(err);
     return callback(null, result)
   });
 }
 
-function deleteTodo(id,callback){
-  var sentencia= "DELETE FROM todo.todo WHERE id= "+id
+function getuser(id, callback) {
+  con.query("SELECT * FROM user.user WHERE id= " + id, function (err, result, fields) {
+    if (err) return callback(err);
+    return callback(null, result)
+  });
+}
+
+function createUser(id,nombre,apellido,contraseña,idioma,edad,activo,callback) {
+  var sentencia = "INSERT INTO user.user (id,nombre,apellido,contraseña,idioma,edad,activo) VALUES ("+id+",'"+nombre+"','"+apellido+"','"+contraseña+"','"+idioma+"',"+edad+","+activo+")"
   console.log(sentencia)
-  con.query(sentencia, function (err, result,fields){
-  console.log('kaka')
+  con.query(sentencia, function (err, result, fields) {
+    if (err) return callback(err);
+    return callback(null, result)
+ });
+}
+
+function updateUser(id, nombre, apellido, contraseña, idioma, edad, activo, callback) {
+  var sentencia="UPDATE user.user SET nombre='"+nombre+"',apellido='"+apellido+"',contraseña='"+contraseña+"',idioma='"+idioma+"',edad="+edad+",activo="+activo+" WHERE id="+id
+    console.log(sentencia)
+  con.query (sentencia, function (err, result, fields) {
+    if (err) return callback(err);
+    return callback(null, result)
+ });
+}
+
+function deleteUser(id,callback) {
+  var sentencia="DELETE FROM user.user WHERE  id="+id
+  console.log (sentencia)
+   con.query (sentencia, function (err, result, fields) {
+    console.log('bien')
+    if (err) return callback(err);
+    return callback(null, result)
+ });
+}
+
+function mediauser(id, callback) {
+  con.query("SELECT * FROM user.user WHERE id= " + id, function (err, result, fields) {
     if (err) return callback(err);
     return callback(null, result)
   });
 }
-//empiezo funcionwes de mi bd users
 
-function deleteusers(id,callback){
-  var sentencia= "DELETE FROM users.users WHERE id= "+id
-  console.log(sentencia)
-  con.query(sentencia, function (err, result,fields){
-  console.log('kaka')
+function getUsersPromedio(callback) {
+  con.query("SELECT AVG edad FROM users.users WHERE edad= 1", function (err, result, fields) {
     if (err) return callback(err);
     return callback(null, result)
   });
 }
 
-function createUsers(nombre,apellido,contraseña,idioma,edad,activo, callback){
-  con.query("INSERT INTO users.users (nombre,apellido,contraseña,idioma,edad,activo) VALUES ('"+nombre+"' ,'"+apellido+"' ,'"+contraseña+"','"+idioma+"', "+edad+", "+activo+")", function (err, result, fields) {
-      console.log('kaka')
-    if (err) return callback(err);
-    return callback(null, result)
-  });
-}
-
-function updateUsers(id,nombre,apellido,contraseña,idioma,edad,activo, callback){
-  var sentencia1= "UPDATE users.users SET nombre = '"+nombre+"' ,apellido='"+apellido+"' ,contraseña='"+contraseña+"',idioma='"+idioma+"', edad="+edad+", activo="+activo+" WHERE id="+id
-  console.log(sentencia1)
-  con.query(sentencia1, function (err, result,fields){
-    if (err) return callback(err);
-    return callback(null, result)
-  });
-}
-function getUsers(id, callback) {
-  console.log(id)
-  con.query("SELECT * FROM users.users WHERE id = " + id, function (err, result, fields) {
-    if (err) return callback(err); 
-      return callback(null, result)
-  })
-}
 
 
 
-//me falta pasar de No realizadas a realizadas. falte el viernes,. ahorta creo nueva tabla
-
-module.exports= {
+module.exports = {
     getTodoList,
-   getTodo,
+    getTodo,
     getTodosRealizados,
     createTodo,
     updateTodo,
     deleteTodo,
-    deleteusers,
-    createUsers,
-    updateUsers,
-    getUsers
+    cambiarARealizado,
+    getuser,
+    createUser,
+    updateUser,
+    deleteUser,
+    getUsersPromedio,
 }
