@@ -154,5 +154,4 @@ module.exports= {
     deleteusers,
     createUsers,
     updateUsers,
-    getUsers,
-}
+    getUsers
